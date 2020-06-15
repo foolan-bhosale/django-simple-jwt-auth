@@ -7,7 +7,7 @@ Django comes with a session-based authentication system that works out of the bo
 
 What do we mean by "the traditional HTML request-response cycle"? Historically, when a user wanted to perform some action (such as creating a new account), the user would fill out a form in their web browser. When they clicked the "Submit" button, the browser would make a request — which included the data the user had typed into the registration form — to the server, the server would process that request, and it would respond with HTML or redirect the browser to a new page. This is what we mean when we talk about doing a "full page refresh."
 
-Why is knowing that Django's built-in authentication only works with the traditional HTML request-response cycle important? Because the client we're building this API for does not adhere to this cycle. Instead, the client expects the server to return JSON instead of HTML. By returning JSON, we can let the client decide what it should do next instead of letting the server decide. With a JSON request-response cycle, the server receives data, processes it, and returns a response (just like in the HTML request-response cycle), but the response does not control the browser's behavior. It just tells us the result of the request.
+Why is knowing that Django's built-in authentication only works with the traditional HTML request-response cycle important? Because the client we're building the API for does not adhere to this cycle. Instead, the client expects the server to return JSON instead of HTML. By returning JSON, we can let the client decide what it should do next instead of letting the server decide. With a JSON request-response cycle, the server receives data, processes it, and returns a response (just like in the HTML request-response cycle), but the response does not control the browser's behavior. It just tells us the result of the request.
 
 Luckily, the team behind Django realized that the trend of web development was moving in this direction. They also knew that some projects might not want to use the built-in models, views, and templates. They may choose to use custom versions instead. To make sure all of the efforts that went into building Django's built-in authentication system wasn't wasted, they decided to make it possible to use the most important parts while maintaining the ability to customize the end result.
 
@@ -19,7 +19,7 @@ By default, Django uses sessions for authentication. Before going further, we sh
 
 
 
-In Django, sessions are stored as cookies. These sessions, along with some built-in middleware and request objects, ensure that there is a user available on every request. The user can be accessed as request.user. When the user is logged in, request.user is an instance of the User class. When they're logged out, request.user is an instance of the AnonymousUser class. Whether the user is authenticated or not, request.user will always exist.
+In Django, sessions are stored as cookies. These sessions, along with some built-in middleware and request objects, ensure that there is a user available on every request. The user can be accessed as ````request.user````. When the user is logged in, ````request.user```` is an instance of the **User** class. When they're logged out, ````request.user```` is an instance of the AnonymousUser class. Whether the user is authenticated or not, ````request.user```` will always exist.
 
 
 This authentication scheme uses Django's default session backend for authentication. Session authentication is appropriate for AJAX clients that are running in the same session context as your website.
@@ -95,6 +95,27 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',  
     )
     ...
+}
+
+```
+
+ Add following code to the root folders ```settings.py```.
+
+
+   If you're using timedelta in SIMPLE_JWT dict make sure to import at the top of the ```settings.py```
+
+
+ ```
+ from datetime import timedelta
+ ```
+
+Read  more about [Some of Simple JWT’s behavior Settings.](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+
+
+```
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=360),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 ```
@@ -260,4 +281,4 @@ We can test it in Postman:
  If the validations pass it should return an object with refresh and access tokens.
 
 
- And that’s it! You now have a fully functional registration endpointAPI that can be consumed by a client from anywhere.
+ And that’s it! You now have a fully functional registration endpointAPIURL that can be consumed by a client from anywhere.
